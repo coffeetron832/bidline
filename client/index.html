@@ -94,31 +94,35 @@
     });
 
     loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = e.target.username.value.trim();
-      const password = e.target.password.value.trim();
+  e.preventDefault();
+  const username = e.target.username.value.trim();
+  const password = e.target.password.value.trim();
 
-      if (!username || !password) {
-        return showToast('Completa ambos campos', true);
-      }
+  if (!username || !password) {
+    return showToast('Completa ambos campos', true);
+  }
 
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
-
-        localStorage.setItem('token', data.token);
-        showToast('Inicio de sesión exitoso');
-        location.reload();
-      } catch (err) {
-        showToast(err.message, true);
-      }
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
     });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
+
+    localStorage.setItem('token', data.token);
+    showToast('Inicio de sesión exitoso');
+
+    // Redirigir a explore.html
+    window.location.href = 'explore.html';
+
+  } catch (err) {
+    showToast(err.message, true);
+  }
+});
+
 
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('token');
