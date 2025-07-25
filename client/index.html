@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles/index.css" />
 
   <!-- Toastify CSS -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 </head>
 <body>
   <main class="container">
@@ -16,7 +16,7 @@
 
     <div id="auth-section">
       <!-- Formulario de registro -->
-      <form id="register-form">
+      <form id="register-form" autocomplete="off">
         <h2>Registro</h2>
         <input type="text" name="username" placeholder="Usuario" required />
         <input type="password" name="password" placeholder="Contraseña" required />
@@ -24,7 +24,7 @@
       </form>
 
       <!-- Formulario de login -->
-      <form id="login-form">
+      <form id="login-form" autocomplete="off">
         <h2>Iniciar sesión</h2>
         <input type="text" name="username" placeholder="Usuario" required />
         <input type="password" name="password" placeholder="Contraseña" required />
@@ -40,7 +40,7 @@
   </main>
 
   <!-- Toastify JS -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
   <script>
     const registerForm = document.getElementById('register-form');
@@ -50,7 +50,8 @@
     const linksSection = document.getElementById('links-section');
 
     // Mostrar enlaces si hay token
-    if (localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (token) {
       authSection.style.display = 'none';
       linksSection.style.display = 'block';
     }
@@ -68,43 +69,54 @@
 
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const username = e.target.username.value;
-      const password = e.target.password.value;
+      const username = e.target.username.value.trim();
+      const password = e.target.password.value.trim();
 
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
+      if (!username || !password) {
+        return showToast('Completa ambos campos', true);
+      }
 
-      if (res.ok) {
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al registrar');
+
         showToast('Registro exitoso. Ahora inicia sesión.');
         registerForm.reset();
-      } else {
-        const data = await res.json();
-        showToast('Error: ' + data.error, true);
+      } catch (err) {
+        showToast(err.message, true);
       }
     });
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const username = e.target.username.value;
-      const password = e.target.password.value;
+      const username = e.target.username.value.trim();
+      const password = e.target.password.value.trim();
 
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
+      if (!username || !password) {
+        return showToast('Completa ambos campos', true);
+      }
 
-      const data = await res.json();
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
 
-      if (res.ok) {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
+
         localStorage.setItem('token', data.token);
         showToast('Inicio de sesión exitoso');
         location.reload();
-      } else {
-        showToast('Error: ' + data.error, true);
+      } catch (err) {
+        showToast(err.message, true);
       }
     });
 
