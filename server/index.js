@@ -15,7 +15,7 @@ const app = express();
 
 // CORS CONFIGURADO
 app.use(cors({
-  origin: 'https://tu-frontend.netlify.app', // ⚠️ CAMBIA ESTO por tu dominio real
+  origin: 'bidline-production.up.railway.app', // ⚠️ CAMBIA ESTO por tu dominio real
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
