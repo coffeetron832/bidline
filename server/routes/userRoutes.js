@@ -3,25 +3,26 @@ const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/verifyToken');
 const Video = require('../models/Video');
+const User = require('../models/User'); // <--- Importa el modelo de usuario
 
 router.get('/perfil', verifyToken, async (req, res) => {
   try {
-    const user = req.user;
+    // Consulta completa del usuario en DB
+    const user = await User.findById(req.user._id);
 
-    // Buscar los videos subidos por el usuario
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    // Videos del usuario
     const videos = await Video.find({ uploader: user._id }).sort({ uploadedAt: -1 });
-
-    // Usamos un sistema de notificaciones embebido en el usuario
-    const notifications = user.notifications || [];
 
     res.json({
       user: {
-        name: user.username,
+        username: user.username,
         email: user.email,
         createdAt: user.createdAt
       },
       videos,
-      notifications
+      notifications: user.notifications || []
     });
 
   } catch (err) {
