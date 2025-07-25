@@ -11,27 +11,24 @@ const app = express();
 // Middleware JSON
 app.use(express.json());
 
-// API
+// Rutas API
 app.use('/api/videos', videoRoutes);
 
 // Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
-// Sirve todo el frontend desde client/
-const clientPath = path.resolve(__dirname, '../client');
+// ─── Sirviendo frontend ──────────────────────────────────────────────────────────
+// Usa process.cwd() para apuntar siempre a la raíz de tu proyecto
+const clientPath = path.join(process.cwd(), 'client');
+console.log('📂 Sirviendo archivos estáticos desde:', clientPath);
 app.use(express.static(clientPath));
 
-// Sirve index tanto en "/" como en "/index.html"
-app.get(['/', '/index.html'], (req, res) => {
-  res.sendFile(path.join(clientPath, 'index.html'));
-});
-
-// Fallback para cualquier otra ruta (SPA)
+// Fallback para cualquier ruta: sirve index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(clientPath, 'index.html'));
 });
 
-// Conexión a MongoDB y arranque
+// ─── Conexión a MongoDB y arranque ───────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 mongoose
   .connect(process.env.MONGO_URI)
