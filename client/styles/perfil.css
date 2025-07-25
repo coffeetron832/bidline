@@ -1,0 +1,118 @@
+/* client/styles/perfil.css */
+
+body {
+  margin: 0;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #222;
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111;
+}
+
+#logoutBtn {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#logoutBtn:hover {
+  background-color: #eee;
+}
+
+section {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.usuario-info p {
+  margin: 0.5rem 0;
+}
+
+#listaVideos .video-card,
+#listaNotificaciones li {
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fafafa;
+}
+
+.video-card span.estado {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+
+.estado.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.estado.aprobado {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.estado.rechazado {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+#listaNotificaciones li {
+  list-style: none;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#listaNotificaciones li.unread {
+  font-weight: bold;
+  background-color: #eef2ff;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  section {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  section h2 {
+    font-size: 1.1rem;
+  }
+}
