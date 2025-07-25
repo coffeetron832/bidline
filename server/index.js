@@ -20,6 +20,8 @@ app.use(cookieParser()); // ← NECESARIO para leer cookies
 app.use('/api/videos', videoRoutes);
 app.use('/api/auth', authRoutes); 
 app.use('/api/user', userRoutes);
+app.use(cookieParser());
+
 
 // Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
