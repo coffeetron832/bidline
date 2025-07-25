@@ -1,9 +1,19 @@
 // client/perfil.js
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Debes iniciar sesión para ver tu perfil.");
+    window.location.href = "/login.html";
+    return;
+  }
+
   try {
     const res = await fetch("/api/user/perfil", {
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) throw new Error("No autorizado");
@@ -12,8 +22,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { user, videos, notifications } = data;
 
     // Info usuario
-    document.getElementById("nombreUsuario").textContent = user.name;
-    document.getElementById("emailUsuario").textContent = user.email;
+    document.getElementById("nombreUsuario").textContent = user.name || user.username;
+    document.getElementById("emailUsuario").textContent = user.email || "Sin email";
     document.getElementById("fechaRegistro").textContent = new Date(user.createdAt).toLocaleDateString();
 
     // Mis videos
