@@ -1,48 +1,50 @@
 // client/perfil.js
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // 1) Leer token
   const token = localStorage.getItem("token");
 
+  // 2) Si no hay token, redirigir al login (index.html)
   if (!token) {
     alert("Debes iniciar sesión para ver tu perfil.");
-    window.location.href = "/login.html";
-    return;
+    return window.location.href = "index.html";
   }
 
   try {
-    const res = await fetch("https://bidline-production.up.railway.app/api/user/perfil", {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
+    // 3) Petición con ruta relativa
+    const res = await fetch("/api/user/perfil", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
 
     if (!res.ok) throw new Error("No autorizado");
 
-    const data = await res.json();
-    const { user, videos, notifications } = data;
+    // 4) Procesar respuesta
+    const { user, videos, notifications } = await res.json();
 
     // Info usuario
     document.getElementById("nombreUsuario").textContent = user.username;
-    document.getElementById("emailUsuario").textContent = user.email || "Sin email";
-    document.getElementById("fechaRegistro").textContent = new Date(user.createdAt).toLocaleDateString();
+    document.getElementById("fechaRegistro").textContent =
+      new Date(user.createdAt).toLocaleDateString();
 
     // Mis videos
     const listaVideos = document.getElementById("listaVideos");
     if (videos.length === 0) {
       listaVideos.innerHTML = "<p>No has subido videos todavía.</p>";
     } else {
+      listaVideos.innerHTML = ""; // limpiar
       videos.forEach(video => {
         const div = document.createElement("div");
         div.classList.add("video-card");
-
         div.innerHTML = `
           <p><strong>${video.title}</strong></p>
           <p>Subido: ${new Date(video.uploadedAt).toLocaleDateString()}</p>
           <span class="estado ${video.status}">${video.status}</span>
-          <br/>
           <a href="/videos/${video.filename}" target="_blank">Ver video</a>
         `;
-
         listaVideos.appendChild(div);
       });
     }
@@ -52,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (notifications.length === 0) {
       listaNotificaciones.innerHTML = "<li>No tienes notificaciones.</li>";
     } else {
+      listaNotificaciones.innerHTML = ""; // limpiar
       notifications.forEach(n => {
         const li = document.createElement("li");
         li.classList.toggle("unread", !n.read);
@@ -64,7 +67,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
   } catch (err) {
+    console.error("Perfil error:", err);
     alert("Debes iniciar sesión para ver tu perfil.");
-    window.location.href = "/login.html";
+    window.location.href = "index.html";
   }
 });
