@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Revisión de videos</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f4f4f4;
+      padding: 40px;
+      margin: 0;
+      color: #222;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .video-card {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    video {
+      width: 100%;
+      max-height: 300px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .aceptar {
+      background-color: #2e7d32;
+      color: white;
+    }
+
+    .rechazar {
+      background-color: #c62828;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Revisión de videos pendientes</h1>
+  <div id="contenedor"></div>
+
+  <script>
+    const contenedor = document.getElementById("contenedor");
+
+    async function cargarVideos() {
+      const res = await fetch('/review-pendientes');
+      const videos = await res.json();
+
+      contenedor.innerHTML = '';
+
+      if (videos.length === 0) {
+        contenedor.innerHTML = "<p>No hay videos pendientes.</p>";
+        return;
+      }
+
+      videos.forEach(video => {
+        const card = document.createElement("div");
+        card.className = "video-card";
+        card.innerHTML = `
+          <video src="/uploads/${video.filename}" controls></video>
+          <h2>${video.title}</h2>
+          <p>${video.description}</p>
+          <div class="controls">
+            <button class="aceptar" onclick="moderar(${video.id}, 'aceptar')">Aceptar</button>
+            <button class="rechazar" onclick="moderar(${video.id}, 'rechazar')">Rechazar</button>
+          </div>
+        `;
+        contenedor.appendChild(card);
+      });
+    }
+
+    async function moderar(id, action) {
+      await fetch(`/review/${id}/${action}`, { method: 'POST' });
+      cargarVideos();
+    }
+
+    cargarVideos();
+  </script>
+</body>
+</html>
