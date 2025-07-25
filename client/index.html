@@ -73,30 +73,35 @@
 
 
     registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = e.target.username.value.trim();
-      const password = e.target.password.value.trim();
+  e.preventDefault();
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value.trim();
 
-      if (!username || !password) {
-        return showToast('Completa ambos campos', true);
-      }
+  if (!username || !password) {
+    return showToast('Completa ambos campos', true);
+  }
 
-      try {
-        const res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Error al registrar');
-
-        showToast('Registro exitoso. Ahora inicia sesión.');
-        registerForm.reset();
-      } catch (err) {
-        showToast(err.message, true);
-      }
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
     });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Error al registrar');
+
+    showToast('Registro exitoso. Ahora inicia sesión.');
+    
+    // Limpiar manualmente los campos para asegurar
+    document.getElementById('reg-username').value = '';
+    document.getElementById('reg-password').value = '';
+
+  } catch (err) {
+    showToast(err.message, true);
+  }
+});
+
 
     loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
