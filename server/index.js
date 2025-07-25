@@ -18,7 +18,7 @@ app.use('/api/videos', videoRoutes);
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 // ✅ Servir frontend desde la carpeta client
-const clientPath = path.resolve(__dirname, '../client');
+const clientPath = path.join(__dirname, '..', 'client');
 console.log('📂 Sirviendo archivos estáticos desde:', clientPath);
 app.use(express.static(clientPath));
 
