@@ -39,7 +39,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Protege solo review.html
 app.get('/review.html', authMiddleware, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'review.html'));
+  res.sendFile(path.join(__dirname, 'data', 'review.html'));
 });
 
 // El resto de archivos públicos
