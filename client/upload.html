@@ -11,14 +11,58 @@
     <h1>Subir video</h1>
     <p>Todos los videos pasan por una revisión manual antes de ser publicados.</p>
 
-    <form class="upload-form" action="/api/videos/upload" method="POST" enctype="multipart/form-data">
+    <form id="upload-form" class="upload-form">
       <input type="text" name="title" placeholder="Título del video" required />
       <textarea name="description" placeholder="Descripción (opcional)" rows="4"></textarea>
       <input type="file" name="video" accept="video/mp4,video/webm" required />
       <button type="submit">Enviar para revisión</button>
     </form>
 
+    <div id="message"></div>
+
     <a href="index.html">← Volver al inicio</a>
   </main>
+
+  <script>
+    const form = document.getElementById('upload-form');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        messageDiv.textContent = 'Debes iniciar sesión para subir un video.';
+        messageDiv.style.color = 'red';
+        return;
+      }
+
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch('/api/videos/upload', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          messageDiv.textContent = 'Video enviado correctamente. Será revisado antes de publicarse.';
+          messageDiv.style.color = 'green';
+          form.reset();
+        } else {
+          messageDiv.textContent = data.error || 'Ocurrió un error al subir el video.';
+          messageDiv.style.color = 'red';
+        }
+      } catch (err) {
+        messageDiv.textContent = 'Error de conexión con el servidor.';
+        messageDiv.style.color = 'red';
+      }
+    });
+  </script>
 </body>
 </html>
