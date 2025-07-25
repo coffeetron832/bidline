@@ -24,4 +24,34 @@ const getApprovedVideos = async (req, res) => {
   }
 };
 
-module.exports = { uploadVideo, getApprovedVideos };
+const getPendingVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ status: 'pendiente' }).sort({ uploadedAt: -1 });
+    res.json(videos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener videos pendientes' });
+  }
+};
+
+const updateVideoStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['aprobado', 'rechazado'].includes(status)) {
+    return res.status(400).json({ error: 'Estado inválido' });
+  }
+
+  try {
+    const video = await Video.findByIdAndUpdate(id, { status }, { new: true });
+    res.json(video);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al actualizar el estado del video' });
+  }
+};
+
+module.exports = {
+  uploadVideo,
+  getApprovedVideos,
+  getPendingVideos,
+  updateVideoStatus
+};
