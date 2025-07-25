@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
+const authRoutes = require('./routes/authRoutes'); // ← Agrega esto
 const videoRoutes = require('./routes/videoRoutes');
 
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.json());
 
 // Rutas API
 app.use('/api/videos', videoRoutes);
+app.use('/api/auth', authRoutes); 
 
 // Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
