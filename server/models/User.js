@@ -1,9 +1,17 @@
+// server/models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const notificationSchema = new mongoose.Schema({
+  message: String,
+  read: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  notifications: [notificationSchema]
 });
 
 userSchema.pre('save', async function (next) {
