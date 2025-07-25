@@ -1,10 +1,19 @@
 // server/middleware/reviewQueue.js
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+
+// Ruta absoluta a la carpeta de subida
+const uploadDir = path.join(__dirname, '../../public/uploads');
+
+// Crear la carpeta si no existe
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/uploads/');
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -22,3 +31,4 @@ const upload = multer({
 });
 
 module.exports = upload;
+
