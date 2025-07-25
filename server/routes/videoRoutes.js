@@ -13,10 +13,15 @@ const {
 
 // Solo usuarios autenticados pueden subir videos
 router.post('/upload', auth, upload.single('video'), uploadVideo);
-router.post('/upload', upload.single('video'), uploadVideo);
-router.get('/explore', getApprovedVideos);
-router.get('/pending', getPendingVideos); // Ruta para panel admin
-router.put('/review/:id', updateVideoStatus); // Cambiar estado del video
 
+// Ver videos públicos
+router.get('/explore', getApprovedVideos);
+
+// Panel admin: videos pendientes
+router.get('/pending', auth, getPendingVideos); // Mejor proteger esto
+
+// Aprobar o rechazar video
+router.put('/review/:id', auth, updateVideoStatus); // También protegido
 
 module.exports = router;
+
