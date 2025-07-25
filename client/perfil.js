@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { user, videos, notifications } = data;
 
     // Info usuario
-    document.getElementById("nombreUsuario").textContent = user.name || user.username;
+    document.getElementById("nombreUsuario").textContent = user.username;
     document.getElementById("emailUsuario").textContent = user.email || "Sin email";
     document.getElementById("fechaRegistro").textContent = new Date(user.createdAt).toLocaleDateString();
 
