@@ -47,3 +47,32 @@ h1 {
   font-size: 0.9rem;
   color: #555;
 }
+
+
+.explore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+}
+
+.btn-perfil {
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: #333;
+  background-color: transparent;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.btn-perfil:hover {
+  background-color: #eee;
+}
+
+.btn-perfil i {
+  width: 20px;
+  height: 20px;
+}
