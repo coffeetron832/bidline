@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sube tu video | emptyvideo</title>
   <link rel="stylesheet" href="styles/upload.css" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 </head>
 <body>
   <main class="container">
@@ -18,22 +21,28 @@
       <button type="submit">Enviar para revisión</button>
     </form>
 
-    <div id="message"></div>
-
     <a href="index.html">← Volver al inicio</a>
   </main>
 
+  <!-- Toastify JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
   <script>
     const form = document.getElementById('upload-form');
-    const messageDiv = document.getElementById('message');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const token = localStorage.getItem('token');
       if (!token) {
-        messageDiv.textContent = 'Debes iniciar sesión para subir un video.';
-        messageDiv.style.color = 'red';
+        Toastify({
+          text: "Debes iniciar sesión para subir un video.",
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#e53935"
+        }).showToast();
         return;
       }
 
@@ -51,16 +60,34 @@
         const data = await res.json();
 
         if (res.ok) {
-          messageDiv.textContent = 'Video enviado correctamente. Será revisado antes de publicarse.';
-          messageDiv.style.color = 'green';
+          Toastify({
+            text: "✅ Video enviado correctamente. Será revisado antes de publicarse.",
+            duration: 4000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#4caf50"
+          }).showToast();
           form.reset();
         } else {
-          messageDiv.textContent = data.error || 'Ocurrió un error al subir el video.';
-          messageDiv.style.color = 'red';
+          Toastify({
+            text: `❌ ${data.error || 'Ocurrió un error al subir el video.'}`,
+            duration: 4000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            backgroundColor: "#e53935"
+          }).showToast();
         }
       } catch (err) {
-        messageDiv.textContent = 'Error de conexión con el servidor.';
-        messageDiv.style.color = 'red';
+        Toastify({
+          text: "❌ Error de conexión con el servidor.",
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#e53935"
+        }).showToast();
       }
     });
   </script>
