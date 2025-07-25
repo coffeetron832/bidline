@@ -15,21 +15,50 @@
     <p>Una plataforma de video sin anuncios. Simple, sobria y poderosa.</p>
 
     <div id="auth-section">
-     <!-- Formulario de registro -->
-<form id="register-form" autocomplete="off">
-  <h2>Registro</h2>
-  <input type="text" name="reg_username" id="reg-username" placeholder="Usuario" required autocomplete="off" />
-  <input type="password" name="reg_password" id="reg-password" placeholder="Contraseña" required autocomplete="off" />
-  <button type="submit">Registrarse</button>
-</form>
+      <!-- Formulario de registro -->
+      <form id="register-form" autocomplete="off" novalidate>
+        <!-- Campo oculto anti‑autofill -->
+        <input type="text" name="fakeusernameremembered" id="fakeusernameremembered" style="display:none;" />
 
-
+        <h2>Registro</h2>
+        <input
+          type="text"
+          name="reg_username"
+          id="reg-username"
+          placeholder="Usuario"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="password"
+          name="reg_password"
+          id="reg-password"
+          placeholder="Contraseña"
+          required
+          autocomplete="new-password"
+        />
+        <button type="submit">Registrarse</button>
+      </form>
 
       <!-- Formulario de login -->
-      <form id="login-form" autocomplete="off">
+      <form id="login-form" autocomplete="off" novalidate>
         <h2>Iniciar sesión</h2>
-        <input type="text" name="username" placeholder="Usuario" required />
-        <input type="password" name="password" placeholder="Contraseña" required />
+        <input
+          type="text"
+          name="login_username"
+          id="login-username"
+          placeholder="Usuario"
+          required
+          autocomplete="off"
+        />
+        <input
+          type="password"
+          name="login_password"
+          id="login-password"
+          placeholder="Contraseña"
+          required
+          autocomplete="new-password"
+        />
         <button type="submit">Entrar</button>
       </form>
     </div>
@@ -59,80 +88,79 @@
     }
 
     function showToast(message, isError = false) {
-  Toastify({
-    text: message,
-    duration: 4000,
-    close: true,
-    gravity: "top",
-    position: "right",
-    style: {
-      background: isError ? "#e53935" : "#4caf50"
+      Toastify({
+        text: message,
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        style: {
+          background: isError ? "#e53935" : "#4caf50"
+        }
+      }).showToast();
     }
-  }).showToast();
-}
-
 
     registerForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = document.getElementById('reg-username').value.trim();
-  const password = document.getElementById('reg-password').value.trim();
+      e.preventDefault();
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-password').value.trim();
 
-  if (!username || !password) {
-    return showToast('Completa ambos campos', true);
-  }
+      if (!username || !password) {
+        return showToast('Completa ambos campos', true);
+      }
 
-  try {
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al registrar');
+
+        showToast('Registro exitoso. Ahora inicia sesión.');
+
+        // Limpiar manualmente los campos para asegurar
+        document.getElementById('reg-username').value = '';
+        document.getElementById('reg-password').value = '';
+        // Quitar el foco
+        document.getElementById('reg-username').blur();
+        document.getElementById('reg-password').blur();
+
+      } catch (err) {
+        showToast(err.message, true);
+      }
     });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Error al registrar');
-
-    showToast('Registro exitoso. Ahora inicia sesión.');
-    
-    // Limpiar manualmente los campos para asegurar
-    document.getElementById('reg-username').value = '';
-    document.getElementById('reg-password').value = '';
-
-  } catch (err) {
-    showToast(err.message, true);
-  }
-});
-
 
     loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const username = e.target.username.value.trim();
-  const password = e.target.password.value.trim();
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
 
-  if (!username || !password) {
-    return showToast('Completa ambos campos', true);
-  }
+      if (!username || !password) {
+        return showToast('Completa ambos campos', true);
+      }
 
-  try {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
+
+        localStorage.setItem('token', data.token);
+        showToast('Inicio de sesión exitoso');
+
+        // Redirigir a explore.html
+        window.location.href = 'explore.html';
+      } catch (err) {
+        showToast(err.message, true);
+      }
     });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión');
-
-    localStorage.setItem('token', data.token);
-    showToast('Inicio de sesión exitoso');
-
-    // Redirigir a explore.html
-    window.location.href = 'explore.html';
-
-  } catch (err) {
-    showToast(err.message, true);
-  }
-});
-
 
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('token');
