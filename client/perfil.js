@@ -10,11 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch("/api/user/perfil", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch("https://bidline-production.up.railway.app/api/user/perfil", {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
 
     if (!res.ok) throw new Error("No autorizado");
 
