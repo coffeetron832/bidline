@@ -1,0 +1,38 @@
+<!-- client/perfil.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi perfil - emptyvideo</title>
+  <link rel="stylesheet" href="styles/perfil.css">
+</head>
+<body>
+  <header>
+    <h1>Mi perfil</h1>
+    <button id="logoutBtn">Cerrar sesión</button>
+  </header>
+
+  <section class="usuario-info">
+    <h2>Información del usuario</h2>
+    <p><strong>Nombre:</strong> <span id="nombreUsuario">Cargando...</span></p>
+    <p><strong>Miembro desde:</strong> <span id="fechaRegistro">Cargando...</span></p>
+  </section>
+
+  <section class="mis-videos">
+    <h2>Mis videos</h2>
+    <div id="listaVideos">
+      <!-- Se llenará dinámicamente -->
+    </div>
+  </section>
+
+  <section class="notificaciones">
+    <h2>Notificaciones</h2>
+    <ul id="listaNotificaciones">
+      <!-- Se llenará dinámicamente -->
+    </ul>
+  </section>
+
+  <script src="perfil.js"></script>
+</body>
+</html>
