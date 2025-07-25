@@ -15,7 +15,7 @@ const app = express();
 
 // CORS CONFIGURADO
 app.use(cors({
-  origin: 'https://bidline-production.up.railway.app/', 
+  origin: 'https://bidline-production.up.railway.app', 
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
