@@ -5,10 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Explorar | emptyvideo</title>
   <link rel="stylesheet" href="styles/explore.css" />
+
+  <!-- Lucide icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-  <main class="container">
+  <header class="explore-header">
     <h1>Explora videos</h1>
+    <a href="perfil.html" class="btn-perfil" title="Ir a mi perfil">
+      <i data-lucide="user"></i>
+    </a>
+  </header>
+
+  <main class="container">
     <p>Contenido real, sin anuncios.</p>
 
     <section class="video-grid">
@@ -22,5 +31,9 @@
 
     <a href="index.html">← Volver al inicio</a>
   </main>
+
+  <script>
+    lucide.createIcons(); // Renderiza los íconos Lucide
+  </script>
 </body>
 </html>
