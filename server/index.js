@@ -11,32 +11,33 @@ const app = express();
 // Middleware JSON
 app.use(express.json());
 
-// Rutas de API
+// API
 app.use('/api/videos', videoRoutes);
 
-// Ruta estática para videos subidos
+// Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
-// ✅ Servir frontend desde la carpeta client
-const clientPath = path.join(__dirname, '..', 'client');
-console.log('📂 Sirviendo archivos estáticos desde:', clientPath);
+// Sirve todo el frontend desde client/
+const clientPath = path.resolve(__dirname, '../client');
 app.use(express.static(clientPath));
 
-// ✅ Fallback para cualquier otra ruta: sirve index.html
+// Sirve index tanto en "/" como en "/index.html"
+app.get(['/', '/index.html'], (req, res) => {
+  res.sendFile(path.join(clientPath, 'index.html'));
+});
+
+// Fallback para cualquier otra ruta (SPA)
 app.get('*', (req, res) => {
   res.sendFile(path.join(clientPath, 'index.html'));
 });
 
-// Conexión y arranque del servidor
+// Conexión a MongoDB y arranque
 const PORT = process.env.PORT || 3000;
-
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB conectado');
-    app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-    });
+    app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
   })
   .catch(err => {
     console.error('❌ Error al conectar a MongoDB:', err);
