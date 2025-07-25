@@ -9,10 +9,43 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'client')));
+
+// --- Middleware de autenticación básica ---
+const authMiddleware = (req, res, next) => {
+  const auth = req.headers.authorization;
+
+  if (!auth || !auth.startsWith('Basic ')) {
+    res.setHeader('WWW-Authenticate', 'Basic realm="Revisión de videos"');
+    return res.status(401).send('Autenticación requerida.');
+  }
+
+  const base64Credentials = auth.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+  const [user, pass] = credentials.split(':');
+
+  const USERNAME = 'adminjuancho';
+  const PASSWORD = 'clavefuerte2025';
+
+  if (user === USERNAME && pass === PASSWORD) {
+    return next();
+  }
+
+  res.setHeader('WWW-Authenticate', 'Basic realm="Revisión de videos"');
+  return res.status(401).send('Credenciales inválidas.');
+};
+
+// --- Archivos estáticos ---
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Almacenamiento de archivos
+// Protege solo review.html
+app.get('/review.html', authMiddleware, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'review.html'));
+});
+
+// El resto de archivos públicos
+app.use(express.static(path.join(__dirname, '..', 'client')));
+
+// --- Almacenamiento de archivos ---
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'server/uploads'),
   filename: (req, file, cb) => {
@@ -20,10 +53,9 @@ const storage = multer.diskStorage({
     cb(null, unique);
   }
 });
-
 const upload = multer({ storage });
 
-// Simulación de base de datos
+// --- Simulación de base de datos ---
 const VIDEO_DB_PATH = path.join(__dirname, 'data', 'videos.json');
 
 function saveVideoInfo(info) {
@@ -35,6 +67,7 @@ function saveVideoInfo(info) {
   fs.writeFileSync(VIDEO_DB_PATH, JSON.stringify(db, null, 2));
 }
 
+// --- Endpoints ---
 app.post('/upload', upload.single('video'), (req, res) => {
   const { title, description } = req.body;
 
@@ -48,7 +81,6 @@ app.post('/upload', upload.single('video'), (req, res) => {
   };
 
   saveVideoInfo(videoInfo);
-
   res.json({ message: 'Video enviado para revisión.' });
 });
 
