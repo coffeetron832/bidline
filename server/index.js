@@ -3,7 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
-const cookieParser = require('cookie-parser'); // ← AÑADIDO
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
 const videoRoutes = require('./routes/videoRoutes');
@@ -12,16 +13,21 @@ const userRoutes = require('./routes/userRoutes');
 dotenv.config();
 const app = express();
 
-// Middleware
+// CORS CONFIGURADO
+app.use(cors({
+  origin: 'https://tu-frontend.netlify.app', // ⚠️ CAMBIA ESTO por tu dominio real
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Middlewares base
 app.use(express.json());
-app.use(cookieParser()); // ← NECESARIO para leer cookies
+app.use(cookieParser());
 
 // Rutas API
 app.use('/api/videos', videoRoutes);
-app.use('/api/auth', authRoutes); 
+app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
-app.use(cookieParser());
-
 
 // Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
@@ -31,12 +37,12 @@ const clientPath = path.join(process.cwd(), 'client');
 console.log('📂 Sirviendo archivos estáticos desde:', clientPath);
 app.use(express.static(clientPath));
 
-// Fallback
+// Fallback para SPA
 app.get('*', (req, res) => {
   res.sendFile(path.join(clientPath, 'index.html'));
 });
 
-// Conexión MongoDB y arranque
+// Conexión a MongoDB y arranque del servidor
 const PORT = process.env.PORT || 3000;
 mongoose
   .connect(process.env.MONGO_URI)
@@ -48,4 +54,3 @@ mongoose
     console.error('❌ Error al conectar a MongoDB:', err);
     process.exit(1);
   });
-
