@@ -13,12 +13,13 @@ app.use(express.json());
 app.use('/uploads', express.static('public/uploads'));
 app.use('/api/videos', videoRoutes);
 
-// 👉 Servir archivos estáticos desde 'client'
-app.use(express.static(path.join(__dirname, '..', 'client')));
+// ✅ Servir archivos estáticos desde la carpeta client
+const clientPath = path.join(__dirname, '..', 'client');
+app.use(express.static(clientPath));
 
-// 👉 Servir index.html en la raíz
+// ✅ Ruta raíz: redirigir a index.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'client', 'index.html'));
+  res.sendFile(path.join(clientPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
