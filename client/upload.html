@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sube tu video | emptyvideo</title>
+  <link rel="stylesheet" href="styles/upload.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Subir video</h1>
+    <p>Todos los videos pasan por una revisión manual antes de ser publicados.</p>
+
+    <form class="upload-form" action="/api/videos/upload" method="POST" enctype="multipart/form-data">
+      <input type="text" name="title" placeholder="Título del video" required />
+      <textarea name="description" placeholder="Descripción (opcional)" rows="4"></textarea>
+      <input type="file" name="video" accept="video/mp4,video/webm" required />
+      <button type="submit">Enviar para revisión</button>
+    </form>
+
+    <a href="index.html">← Volver al inicio</a>
+  </main>
+</body>
+</html>
