@@ -3,13 +3,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  // 🔑 Buscar el token en las cookies
+  const token = req.cookies.token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!token) {
     return res.status(401).json({ error: "Token no proporcionado" });
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,7 +16,7 @@ const verifyToken = async (req, res, next) => {
 
     if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
 
-    req.user = user; // lo dejamos disponible para la ruta
+    req.user = user; // deja el usuario en la request
     next();
   } catch (err) {
     res.status(401).json({ error: "Token inválido" });
