@@ -10,8 +10,91 @@
   <main class="container">
     <h1>emptyvideo</h1>
     <p>Una plataforma de video sin anuncios. Simple, sobria y poderosa.</p>
-    <a href="explore.html">Explorar videos</a>
-    <a href="upload.html">Subir un video</a>
+
+    <div id="auth-section">
+      <!-- Formulario de registro -->
+      <form id="register-form">
+        <h2>Registro</h2>
+        <input type="text" name="username" placeholder="Usuario" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <button type="submit">Registrarse</button>
+      </form>
+
+      <!-- Formulario de login -->
+      <form id="login-form">
+        <h2>Iniciar sesión</h2>
+        <input type="text" name="username" placeholder="Usuario" required />
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+
+    <div id="links-section" style="display: none;">
+      <a href="explore.html">Explorar videos</a>
+      <a href="upload.html">Subir un video</a>
+      <button id="logout-btn">Cerrar sesión</button>
+    </div>
   </main>
+
+  <script>
+    const registerForm = document.getElementById('register-form');
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-btn');
+    const authSection = document.getElementById('auth-section');
+    const linksSection = document.getElementById('links-section');
+
+    // Mostrar enlaces si hay token
+    if (localStorage.getItem('token')) {
+      authSection.style.display = 'none';
+      linksSection.style.display = 'block';
+    }
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = e.target.username.value;
+      const password = e.target.password.value;
+
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      if (res.ok) {
+        alert('Registro exitoso. Ahora inicia sesión.');
+      } else {
+        const data = await res.json();
+        alert('Error: ' + data.error);
+      }
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = e.target.username.value;
+      const password = e.target.password.value;
+
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        alert('Inicio de sesión exitoso');
+        location.reload();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      alert('Sesión cerrada');
+      location.reload();
+    });
+  </script>
 </body>
 </html>
