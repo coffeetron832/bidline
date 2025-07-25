@@ -15,7 +15,7 @@ const app = express();
 
 // CORS CONFIGURADO
 app.use(cors({
-  origin: 'bidline-production.up.railway.app', // ⚠️ CAMBIA ESTO por tu dominio real
+  origin: 'https://bidline-production.up.railway.app/', 
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
