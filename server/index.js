@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes'); // ← Agrega esto
 const videoRoutes = require('./routes/videoRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 // Rutas API
 app.use('/api/videos', videoRoutes);
 app.use('/api/auth', authRoutes); 
+app.use('/api/user', userRoutes);
 
 // Archivos subidos
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
