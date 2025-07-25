@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>emptyvideo</title>
   <link rel="stylesheet" href="styles/index.css" />
+
+  <!-- Toastify CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 </head>
 <body>
   <main class="container">
@@ -36,6 +39,9 @@
     </div>
   </main>
 
+  <!-- Toastify JS -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
   <script>
     const registerForm = document.getElementById('register-form');
     const loginForm = document.getElementById('login-form');
@@ -47,6 +53,17 @@
     if (localStorage.getItem('token')) {
       authSection.style.display = 'none';
       linksSection.style.display = 'block';
+    }
+
+    function showToast(message, isError = false) {
+      Toastify({
+        text: message,
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: isError ? "#e53935" : "#4caf50"
+      }).showToast();
     }
 
     registerForm.addEventListener('submit', async (e) => {
@@ -61,10 +78,11 @@
       });
 
       if (res.ok) {
-        alert('Registro exitoso. Ahora inicia sesión.');
+        showToast('Registro exitoso. Ahora inicia sesión.');
+        registerForm.reset();
       } else {
         const data = await res.json();
-        alert('Error: ' + data.error);
+        showToast('Error: ' + data.error, true);
       }
     });
 
@@ -83,16 +101,16 @@
 
       if (res.ok) {
         localStorage.setItem('token', data.token);
-        alert('Inicio de sesión exitoso');
+        showToast('Inicio de sesión exitoso');
         location.reload();
       } else {
-        alert('Error: ' + data.error);
+        showToast('Error: ' + data.error, true);
       }
     });
 
     logoutBtn.addEventListener('click', () => {
       localStorage.removeItem('token');
-      alert('Sesión cerrada');
+      showToast('Sesión cerrada');
       location.reload();
     });
   </script>
