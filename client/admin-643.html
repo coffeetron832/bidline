@@ -35,7 +35,7 @@
       const div = document.createElement('div');
       div.className = 'video-card';
       div.innerHTML = `
-        <video width="320" controls src="/uploads/${video.filename}"></video>
+        <video width="320" controls src="https://bidline-production.up.railway.app/uploads/${video.filename}"></video>
         <h3>${video.title}</h3>
         <p>${video.description}</p>
         <button onclick="cambiarEstado('${video._id}', 'aprobado')">✅ Aprobar</button>
