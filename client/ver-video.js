@@ -50,12 +50,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Pantalla completa
     fullscreenBtn.addEventListener("click", () => {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        reproductor.requestFullscreen();
-      }
-    });
+  const videoWrapper = document.querySelector(".video-wrapper");
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    videoWrapper.requestFullscreen();
+  }
+});
+
 
     // Actualizar duración total
     reproductor.addEventListener("loadedmetadata", () => {
