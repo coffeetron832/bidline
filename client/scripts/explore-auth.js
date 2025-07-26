@@ -47,28 +47,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function showToast(message, isError = false) {
-  Toastify({
-    text: message,
-    duration: 10000, // 8 segundos
-    close: true,
-    gravity: "top",
-    position: "right",
-    stopOnFocus: true, // No desaparece si estás encima
-    offset: {
-      x: 10,
-      y: 60, // Baja un poco para que no se corte
-    },
-    style: {
-      background: isError ? "#e53935" : "#4caf50",
-      fontSize: "0.9rem",
-      padding: "12px 16px",
-      borderRadius: "6px",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-    }
-  }).showToast();
-}
-
-
+    Toastify({
+      text: message,
+      duration: 10000, // 10 segundos
+      close: true,
+      gravity: "top",
+      position: "right",
+      stopOnFocus: true,
+      offset: {
+        x: 10,
+        y: 60,
+      },
+      style: {
+        background: isError ? "#e53935" : "#4caf50",
+        fontSize: "0.9rem",
+        padding: "12px 16px",
+        borderRadius: "6px",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+      }
+    }).showToast();
+  }
 
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -111,7 +109,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       localStorage.setItem("token", data.token);
       showToast("Inicio de sesión exitoso");
-      window.location.reload();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Espera 2 segundos antes de recargar
     } catch (err) {
       showToast(err.message, true);
     }
@@ -120,6 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("token");
     showToast("Sesión cerrada");
-    window.location.reload();
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); // Espera 2 segundos antes de recargar
   });
 });
