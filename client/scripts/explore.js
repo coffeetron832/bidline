@@ -1,18 +1,28 @@
+// client/scripts/explore.js
 document.addEventListener('DOMContentLoaded', async () => {
-  const grid = document.getElementById('video-grid');
+  const grid = document.querySelector('.video-grid');  // <-- aquí
 
   try {
-    const res = await fetch('/api/videos/explore');  // <-- ruta corregida
+    const res = await fetch('/api/videos/explore');
     const videos = await res.json();
 
     if (!Array.isArray(videos)) throw new Error('Respuesta no válida');
+
+    grid.innerHTML = '';  // limpia el contenido de ejemplo
+
+    if (videos.length === 0) {
+      grid.innerHTML = '<p>No hay videos aprobados todavía.</p>';
+      return;
+    }
 
     videos.forEach(video => {
       const card = document.createElement('div');
       card.className = 'video-card';
 
       card.innerHTML = `
-        <video src="${video.cloudinary_url}" controls></video>  <!-- campo corregido -->
+        <a href="ver-video.html?id=${video._id}">
+          <video src="${video.cloudinary_url}" muted></video>
+        </a>
         <h2>${video.title}</h2>
         <p>${video.description || ''}</p>
       `;
