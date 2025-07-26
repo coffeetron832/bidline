@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     stopOnFocus: true,
     offset: {
       x: 10,
-      y: 20, // Más arriba
+      y: 10, // Más arriba
     },
     style: {
       background: isError ? "#e53935" : "#4caf50",
