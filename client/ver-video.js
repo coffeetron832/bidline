@@ -19,67 +19,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("descripcion").textContent =
       `${video.description} \n\n Subido por: ${video.uploader?.username || 'Desconocido'}`;
 
-    const container = document.querySelector(".video-container");
+    const reproductor = document.getElementById("reproductor");
+    reproductor.src = video.cloudinary_url;
 
-    container.innerHTML += `
-      <div class="video-wrapper">
-        <video id="custom-video" preload="metadata">
-          <source src="${video.cloudinary_url}" type="video/mp4">
-          Tu navegador no soporta el video.
-        </video>
+    // Controles
+    const playPauseBtn = document.getElementById("playPause");
+    const muteBtn = document.getElementById("mute");
+    const fullscreenBtn = document.getElementById("fullscreen");
+    const progress = document.getElementById("progress");
+    const currentTimeDisplay = document.getElementById("currentTime");
+    const durationDisplay = document.getElementById("duration");
 
-        <div class="controls">
-          <button id="play-pause" aria-label="Play">
-            <i data-lucide="play"></i>
-          </button>
+    // Iconos
+    const playIcon = playPauseBtn.querySelector("i");
+    const muteIcon = muteBtn.querySelector("i");
 
-          <span id="currentTime">0:00</span>
-
-          <input type="range" id="seek" value="0" min="0" max="100" step="1" />
-
-          <span id="duration">0:00</span>
-        </div>
-      </div>
-    `;
-
-    lucide.createIcons();
-
-    const videoEl = document.getElementById("custom-video");
-    const playPauseBtn = document.getElementById("play-pause");
-    const seek = document.getElementById("seek");
-    const currentTimeEl = document.getElementById("currentTime");
-    const durationEl = document.getElementById("duration");
-
-    const formatTime = (t) => {
-      const minutes = Math.floor(t / 60);
-      const seconds = Math.floor(t % 60).toString().padStart(2, "0");
-      return `${minutes}:${seconds}`;
-    };
-
-    videoEl.addEventListener("loadedmetadata", () => {
-      seek.max = Math.floor(videoEl.duration);
-      durationEl.textContent = formatTime(videoEl.duration);
-    });
-
-    videoEl.addEventListener("timeupdate", () => {
-      seek.value = Math.floor(videoEl.currentTime);
-      currentTimeEl.textContent = formatTime(videoEl.currentTime);
-    });
-
-    seek.addEventListener("input", () => {
-      videoEl.currentTime = seek.value;
-    });
-
+    // Reproducción
     playPauseBtn.addEventListener("click", () => {
-      if (videoEl.paused) {
-        videoEl.play();
-        playPauseBtn.innerHTML = '<i data-lucide="pause"></i>';
+      if (reproductor.paused) {
+        reproductor.play();
+        playIcon.setAttribute("data-lucide", "pause");
       } else {
-        videoEl.pause();
-        playPauseBtn.innerHTML = '<i data-lucide="play"></i>';
+        reproductor.pause();
+        playIcon.setAttribute("data-lucide", "play");
       }
       lucide.createIcons();
     });
+
+    // Silencio
+    muteBtn.addEventListener("click", () => {
+      reproductor.muted = !reproductor.muted;
+      muteIcon.setAttribute("data-lucide", reproductor.muted ? "volume-x" : "volume-2");
+      lucide.createIcons();
+    });
+
+    // Pantalla completa
+    fullscreenBtn.addEventListener("click", () => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        reproductor.requestFullscreen();
+      }
+    });
+
+    // Actualizar duración total
+    reproductor.addEventListener("loadedmetadata", () => {
+      progress.max = reproductor.duration;
+      durationDisplay.textContent = formatTime(reproductor.duration);
+    });
+
+    // Actualizar barra de progreso y tiempo actual
+    reproductor.addEventListener("timeupdate", () => {
+      progress.value = reproductor.currentTime;
+      currentTimeDisplay.textContent = formatTime(reproductor.currentTime);
+    });
+
+    // Saltar en el video
+    progress.addEventListener("input", () => {
+      reproductor.currentTime = progress.value;
+    });
+
   } catch (err) {
     console.error("Error al cargar el video:", err);
     alert("No se pudo cargar el video.");
@@ -87,3 +86,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
