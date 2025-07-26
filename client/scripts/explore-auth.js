@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showToast(message, isError = false) {
   Toastify({
     text: message,
-    duration: 8000, // 8 segundos
+    duration: 10000, // 8 segundos
     close: true,
     gravity: "top",
     position: "right",
