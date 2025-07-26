@@ -20,16 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
     userActions.style.display = "none";
   }
 
+  let currentForm = null;
+
   showLoginBtn.addEventListener("click", () => {
-    authForms.style.display = "block";
-    loginForm.style.display = "flex";
-    registerForm.style.display = "none";
+    if (currentForm === "login") {
+      authForms.style.display = "none";
+      currentForm = null;
+    } else {
+      authForms.style.display = "flex";
+      loginForm.style.display = "flex";
+      registerForm.style.display = "none";
+      currentForm = "login";
+    }
   });
 
   showRegisterBtn.addEventListener("click", () => {
-    authForms.style.display = "block";
-    loginForm.style.display = "none";
-    registerForm.style.display = "flex";
+    if (currentForm === "register") {
+      authForms.style.display = "none";
+      currentForm = null;
+    } else {
+      authForms.style.display = "flex";
+      loginForm.style.display = "none";
+      registerForm.style.display = "flex";
+      currentForm = "register";
+    }
   });
 
   function showToast(message, isError = false) {
@@ -97,22 +111,4 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Sesión cerrada");
     window.location.reload();
   });
-
-
-const loginBtn = document.getElementById("show-login");
-  const registerBtn = document.getElementById("show-register");
-  const authForms = document.getElementById("auth-forms");
-
-  // Alternar visibilidad del formulario
-  function toggleForms() {
-    if (authForms.style.display === "none" || !authForms.style.display) {
-      authForms.style.display = "flex";
-    } else {
-      authForms.style.display = "none";
-    }
-  }
-
-  loginBtn.addEventListener("click", toggleForms);
-  registerBtn.addEventListener("click", toggleForms);
-  
 });
