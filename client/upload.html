@@ -8,6 +8,38 @@
 
   <!-- Toastify CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
+  <style>
+    #progressContainer {
+      display: none;
+      width: 100%;
+      max-width: 500px;
+      height: 22px;
+      background: #eee;
+      border-radius: 12px;
+      margin: 20px auto;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    #progressBar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      transition: width 0.2s ease;
+    }
+
+    #progressText {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 22px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
   <main class="container">
@@ -21,6 +53,11 @@
       <button type="submit">Enviar para revisión</button>
     </form>
 
+    <div id="progressContainer">
+      <div id="progressBar"></div>
+      <span id="progressText">0%</span>
+    </div>
+
     <a href="explore.html">← Volver a explorar videos</a>
   </main>
 
@@ -29,8 +66,11 @@
 
   <script>
     const form = document.getElementById('upload-form');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const token = localStorage.getItem('token');
@@ -47,19 +87,23 @@
       }
 
       const formData = new FormData(form);
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/videos/upload');
+      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
-      try {
-        const res = await fetch('/api/videos/upload', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          body: formData
-        });
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          progressContainer.style.display = 'block';
+          progressBar.style.width = percent + '%';
+          progressText.textContent = percent + '%';
+        }
+      });
 
-        const data = await res.json();
-
-        if (res.ok) {
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          progressBar.style.background = 'linear-gradient(90deg, #00e676, #00c853)';
+          progressText.textContent = '¡Subido!';
           Toastify({
             text: "✅ Video enviado correctamente. Será revisado antes de publicarse.",
             duration: 4000,
@@ -70,8 +114,9 @@
           }).showToast();
           form.reset();
         } else {
+          const res = JSON.parse(xhr.responseText);
           Toastify({
-            text: `❌ ${data.error || 'Ocurrió un error al subir el video.'}`,
+            text: `❌ ${res.error || 'Ocurrió un error al subir el video.'}`,
             duration: 4000,
             close: true,
             gravity: "top",
@@ -79,7 +124,9 @@
             backgroundColor: "#e53935"
           }).showToast();
         }
-      } catch (err) {
+      };
+
+      xhr.onerror = () => {
         Toastify({
           text: "❌ Error de conexión con el servidor.",
           duration: 4000,
@@ -88,7 +135,9 @@
           position: "right",
           backgroundColor: "#e53935"
         }).showToast();
-      }
+      };
+
+      xhr.send(formData);
     });
   </script>
 </body>
