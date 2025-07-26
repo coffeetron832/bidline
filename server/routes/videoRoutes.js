@@ -8,20 +8,25 @@ const {
   uploadVideo,
   getApprovedVideos,
   getPendingVideos,
-  updateVideoStatus
+  updateVideoStatus,
+  deleteVideoPermanently,
+  removeRejectedVideo
 } = require('../controllers/videoController');
 
-// Solo usuarios autenticados pueden subir videos
+// Subida de videos
 router.post('/upload', auth, upload.single('video'), uploadVideo);
 
-// Ver videos públicos
+// Exploración pública
 router.get('/explore', getApprovedVideos);
 
-// Panel admin: videos pendientes
-router.get('/pending', auth, getPendingVideos); // Mejor proteger esto
+// Panel admin
+router.get('/pending', auth, getPendingVideos);
+router.put('/review/:id', auth, updateVideoStatus);
 
-// Aprobar o rechazar video
-router.put('/review/:id', auth, updateVideoStatus); // También protegido
+// 🔥 NUEVAS RUTAS
+router.delete('/delete/:id', auth, deleteVideoPermanently);          // eliminar aprobado
+router.delete('/removeRejected/:id', auth, removeRejectedVideo);     // quitar rechazado
 
 module.exports = router;
+
 
