@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Info usuario
     document.getElementById("nombreUsuario").textContent = user.username;
     document.getElementById("fechaRegistro").textContent =
-      new Date(user.createdAt).toLocaleDateString();
+      user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Desconocido";
 
     // Mis videos
     const listaVideos = document.getElementById("listaVideos");
@@ -70,5 +70,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Perfil error:", err);
     alert("Debes iniciar sesión para ver tu perfil.");
     window.location.href = "index.html";
+  }
+
+  // 🚪 Funcionalidad del botón Cerrar sesión con confirmación
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      const confirmar = confirm("¿Seguro que deseas cerrar sesión?");
+      if (confirmar) {
+        localStorage.removeItem("token");
+        window.location.href = "index.html";
+      }
+    });
   }
 });
