@@ -4,6 +4,7 @@ const videoSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: String,
   cloudinary_url: { type: String, required: true },
+  cloudinary_id: { type: String, required: true }, // 👈 NECESARIO para borrar en Cloudinary
   status: {
     type: String,
     enum: ['pendiente', 'aprobado', 'rechazado'],
