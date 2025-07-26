@@ -12,37 +12,53 @@
   </main>
 
   <script>
-    async function cargarVideos() {
-      const res = await fetch('/api/videos/pending');
-      const videos = await res.json();
+  const token = localStorage.getItem('token');
 
-      const contenedor = document.getElementById('videosPendientes');
-      contenedor.innerHTML = '';
+  async function cargarVideos() {
+    const res = await fetch('/api/videos/pending', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
-      videos.forEach(video => {
-        const div = document.createElement('div');
-        div.className = 'video-card';
-        div.innerHTML = `
-          <video width="320" controls src="/uploads/${video.filename}"></video>
-          <h3>${video.title}</h3>
-          <p>${video.description}</p>
-          <button onclick="cambiarEstado('${video._id}', 'aprobado')">✅ Aprobar</button>
-          <button onclick="cambiarEstado('${video._id}', 'rechazado')">❌ Rechazar</button>
-        `;
-        contenedor.appendChild(div);
-      });
+    const videos = await res.json();
+
+    const contenedor = document.getElementById('videosPendientes');
+    contenedor.innerHTML = '';
+
+    if (!Array.isArray(videos)) {
+      contenedor.innerHTML = `<p>Error: ${videos.error || 'No se pudieron cargar los videos.'}</p>`;
+      return;
     }
 
-    async function cambiarEstado(id, estado) {
-      await fetch('/api/videos/review/' + id, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: estado })
-      });
-      cargarVideos();
-    }
+    videos.forEach(video => {
+      const div = document.createElement('div');
+      div.className = 'video-card';
+      div.innerHTML = `
+        <video width="320" controls src="/uploads/${video.filename}"></video>
+        <h3>${video.title}</h3>
+        <p>${video.description}</p>
+        <button onclick="cambiarEstado('${video._id}', 'aprobado')">✅ Aprobar</button>
+        <button onclick="cambiarEstado('${video._id}', 'rechazado')">❌ Rechazar</button>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  async function cambiarEstado(id, estado) {
+    await fetch('/api/videos/review/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ status: estado })
+    });
 
     cargarVideos();
-  </script>
+  }
+
+  cargarVideos();
+</script>
 </body>
 </html>
