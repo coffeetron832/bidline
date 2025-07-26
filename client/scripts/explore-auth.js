@@ -49,19 +49,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function showToast(message, isError = false) {
   Toastify({
     text: message,
-    duration: 4000,
+    duration: 8000,
     close: true,
     gravity: "top",
     position: "right",
     offset: {
-      x: 10, // opcional, distancia horizontal desde el borde
-      y: 60  // aumenta este valor para bajar la notificación
+      x: 10,
+      y: 60
     },
     style: {
-      background: isError ? "#e53935" : "#4caf50"
+      background: isError ? "#e53935" : "#4caf50",
+      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)"
     }
   }).showToast();
 }
+
 
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
