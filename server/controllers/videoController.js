@@ -17,7 +17,7 @@ const uploadVideo = async (req, res) => {
       title,
       description,
       filename,
-      uploader: req.userId
+      uploader: req.user.id
     });
 
     await video.save();
