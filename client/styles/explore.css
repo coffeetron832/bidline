@@ -6,61 +6,61 @@ body {
 }
 
 .container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 0 20px;
+  max-width: 960px;               /* ligeramente más estrecho */
+  margin: 24px auto;              /* margen superior/inferior reducido */
+  padding: 0 16px;                /* menos padding lateral */
 }
 
 h1 {
   font-size: 2rem;
-  margin-bottom: 10px;
+  margin-bottom: 8px;             /* más compacto */
 }
 
 .video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;                      /* menos separación entre tarjetas */
+  margin-top: 16px;
 }
 
 .video-card {
   background: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  padding: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 10px;                  /* más compacto */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .video-card video {
   width: 100%;
   border-radius: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .video-card h2 {
-  font-size: 1.1rem;
-  margin: 0 0 6px;
+  font-size: 1.05rem;
+  margin: 0 0 4px;
 }
 
 .video-card p {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #555;
 }
 
-
+/* Encabezado más angosto y compacto */
 .explore-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
+  padding: 1.2rem 1rem;
 }
 
 .btn-perfil {
   text-decoration: none;
   border: 1px solid #ccc;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
   color: #333;
   background-color: transparent;
   transition: background 0.2s ease;
