@@ -58,6 +58,29 @@
   font-size: 0.9rem;
   color: #333;
 }
+
+    .equalizer-bar {
+  width: 6px;
+  margin: 0 2px;
+  background: #00e676;
+  animation: bounce 1s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes bounce {
+  0%, 100% { height: 10px; }
+  50% { height: 40px; }
+}
+
+.equalizer-stop {
+  animation: shrink 0.8s forwards ease-out;
+}
+
+@keyframes shrink {
+  0% { height: 30px; }
+  100% { height: 0; opacity: 0; }
+}
+
   </style>
 </head>
 <body>
@@ -73,17 +96,14 @@
     </form>
 
    <div id="equalizerContainer" style="display: none;">
-  <div id="equalizer">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <span id="progressText">0%</span>
-  </div>
+  <div class="equalizer-bar"></div>
+  <div class="equalizer-bar"></div>
+  <div class="equalizer-bar"></div>
+  <div class="equalizer-bar"></div>
+  <div class="equalizer-bar"></div>
+  <span id="progressText"></span>
 </div>
+
 
 
     <a href="explore.html">← Volver a explorar videos</a>
@@ -96,7 +116,6 @@
   const form = document.getElementById('upload-form');
   const equalizerContainer = document.getElementById('equalizerContainer');
   const progressText = document.getElementById('progressText');
-  // Nota: elimina referencias a progressContainer y progressBar
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -138,7 +157,21 @@
           position: "right",
           backgroundColor: "#4caf50"
         }).showToast();
-        form.reset();
+
+        // Detener progresivamente la animación de las barras
+        const bars = equalizerContainer.querySelectorAll('.equalizer-bar');
+        bars.forEach((bar, i) => {
+          setTimeout(() => {
+            bar.classList.add('equalizer-stop');
+          }, i * 150); // efecto dominó
+        });
+
+        // Ocultar el equalizador y limpiar
+        setTimeout(() => {
+          equalizerContainer.style.display = 'none';
+          bars.forEach(bar => bar.classList.remove('equalizer-stop'));
+          form.reset();
+        }, bars.length * 150 + 800); // tiempo total de la animación
       } else {
         const res = JSON.parse(xhr.responseText);
         Toastify({
