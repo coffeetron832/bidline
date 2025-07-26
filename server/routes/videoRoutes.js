@@ -23,6 +23,8 @@ router.get('/explore', getApprovedVideos);
 router.get('/pending', auth, getPendingVideos);
 router.put('/review/:id', auth, updateVideoStatus);
 
+router.get('/:id', getVideoById);
+
 // 🔥 NUEVAS RUTAS
 router.delete('/delete/:id', auth, deleteVideoPermanently);          // eliminar aprobado
 router.delete('/removeRejected/:id', auth, removeRejectedVideo);     // quitar rechazado
