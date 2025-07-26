@@ -47,26 +47,27 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function showToast(message, isError = false) {
-    Toastify({
-      text: message,
-      duration: 10000, // 10 segundos
-      close: true,
-      gravity: "top",
-      position: "right",
-      stopOnFocus: true,
-      offset: {
-        x: 10,
-        y: 60,
-      },
-      style: {
-        background: isError ? "#e53935" : "#4caf50",
-        fontSize: "0.9rem",
-        padding: "12px 16px",
-        borderRadius: "6px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-      }
-    }).showToast();
-  }
+  Toastify({
+    text: message,
+    duration: 10000, // 10 segundos
+    close: true,
+    gravity: "top",
+    position: "right",
+    stopOnFocus: true,
+    offset: {
+      x: 10,
+      y: 20, // Más arriba
+    },
+    style: {
+      background: isError ? "#e53935" : "#4caf50",
+      fontSize: "0.9rem",
+      padding: "12px 16px",
+      borderRadius: "6px",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+    }
+  }).showToast();
+}
+
 
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
