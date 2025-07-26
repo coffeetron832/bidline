@@ -1,4 +1,3 @@
-<!-- client/ver-video.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ver video - emptyvideo</title>
   <link rel="stylesheet" href="styles/ver-video.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
   <header>
@@ -16,12 +16,24 @@
   <main class="video-container">
     <h2 id="titulo">Cargando título...</h2>
     <p id="descripcion">Cargando descripción...</p>
-    <video id="reproductor" controls preload="metadata">
-      Tu navegador no soporta el video.
-    </video>
-    
+
+    <div class="video-wrapper">
+      <video id="reproductor" preload="metadata"></video>
+
+      <div class="controls">
+        <button id="playPause"><i data-lucide="play"></i></button>
+        <span id="currentTime">0:00</span>
+        <input type="range" id="progress" min="0" max="100" value="0">
+        <span id="duration">0:00</span>
+        <button id="mute"><i data-lucide="volume-2"></i></button>
+        <button id="fullscreen"><i data-lucide="maximize"></i></button>
+      </div>
+    </div>
   </main>
 
+  <script>
+    lucide.createIcons(); // Renderizar íconos
+  </script>
   <script src="ver-video.js"></script>
 </body>
 </html>
