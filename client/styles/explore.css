@@ -34,6 +34,27 @@ h1 {
   font-size: 1.2rem;         /* título más pequeño */
 }
 
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-subir {
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  color: #333;
+  font-size: 0.85rem;
+  background-color: transparent;
+  transition: background 0.2s ease;
+}
+
+.btn-subir:hover {
+  background-color: #eee;
+}
+
 .btn-perfil {
   text-decoration: none;
   border: 1px solid #ccc;
