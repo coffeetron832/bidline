@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.className = 'video-card';
 
       card.innerHTML = `
-        <video src="${video.filePath}" controls></video>
+        <video src="${video.cloudinary_url}" controls></video>
         <h2>${video.title}</h2>
         <p>${video.description || ''}</p>
       `;
