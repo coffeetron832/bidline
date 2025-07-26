@@ -107,3 +107,40 @@ video {
   min-width: 38px;
   text-align: center;
 }
+
+
+.video-wrapper:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
+.video-wrapper .controls {
+  position: absolute;
+  bottom: 20px;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.video-wrapper.hide-controls .controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
