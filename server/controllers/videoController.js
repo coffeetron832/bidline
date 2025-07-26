@@ -6,18 +6,15 @@ const uploadVideo = async (req, res) => {
   try {
     const { title, description } = req.body;
 
-    // Validaciones básicas
-    if (!title || !description || !req.file || !req.file.path) {
+    if (!title || !description || !req.file || !req.file.path || !req.file.filename) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
-    const cloudinaryUrl = req.file.path; // Multer + Cloudinary deja aquí la URL pública
-
-    // Crear documento con enlace en la nube
     const video = new Video({
       title,
       description,
-      cloudinary_url: cloudinaryUrl,
+      cloudinary_url: req.file.path,       // URL pública
+      cloudinary_id: req.file.filename,    // ⚠️ Este es el public_id en Cloudinary
       uploader: req.user.id
     });
 
