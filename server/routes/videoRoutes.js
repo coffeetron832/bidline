@@ -7,6 +7,7 @@ const auth = require('../middleware/auth');
 const {
   uploadVideo,
   getApprovedVideos,
+  getVideoById,
   getPendingVideos,
   updateVideoStatus,
   deleteVideoPermanently,
