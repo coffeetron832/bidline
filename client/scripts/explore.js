@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const grid = document.getElementById('video-grid');
+  const grid = document.querySelector('.video-grid');
+
 
   try {
-    const res = await fetch('/api/videos');
+    const res = await fetch('/api/videos/explore');
     const videos = await res.json();
 
     if (!Array.isArray(videos)) throw new Error('Respuesta no válida');
