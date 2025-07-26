@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const video = await res.json();
 
     document.getElementById("titulo").textContent = video.title;
-    document.getElementById("descripcion").textContent = video.description;
+    document.getElementById("descripcion").textContent =
+  `${video.description} \n\n Subido por: ${video.uploader?.username || 'Desconocido'}`;
+
     
     const reproductor = document.getElementById("reproductor");
     reproductor.src = video.cloudinary_url;
