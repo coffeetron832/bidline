@@ -6,30 +6,30 @@ body {
 }
 
 .container {
-  max-width: 960px;               /* ligeramente más estrecho */
-  margin: 24px auto;              /* margen superior/inferior reducido */
-  padding: 0 16px;                /* menos padding lateral */
+  max-width: 880px;         /* más compacto */
+  margin: 24px auto;        /* margen superior/inferior reducido */
+  padding: 0 16px;          /* padding lateral reducido */
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 8px;             /* más compacto */
+  font-size: 1.8rem;        /* un poco más pequeño */
+  margin-bottom: 8px;
 }
 
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 18px;                      /* menos separación entre tarjetas */
+  gap: 16px;                /* menor espacio entre tarjetas */
   margin-top: 16px;
 }
 
 .video-card {
   background: white;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 6px;       /* bordes más compactos */
   overflow: hidden;
-  padding: 10px;                  /* más compacto */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  padding: 10px;            /* menos padding */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .video-card video {
@@ -39,33 +39,33 @@ h1 {
 }
 
 .video-card h2 {
-  font-size: 1.05rem;
+  font-size: 1rem;          /* más compacto */
   margin: 0 0 4px;
 }
 
 .video-card p {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: #555;
 }
 
-/* Encabezado más angosto y compacto */
 .explore-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.2rem 1rem;
+  padding: 1rem 0;          /* menos padding vertical */
 }
 
 .btn-perfil {
   text-decoration: none;
   border: 1px solid #ccc;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.6rem;   /* menos padding en botones */
   border-radius: 6px;
   color: #333;
   background-color: transparent;
   transition: background 0.2s ease;
   display: flex;
   align-items: center;
+  font-size: 0.9rem;
 }
 
 .btn-perfil:hover {
@@ -73,6 +73,6 @@ h1 {
 }
 
 .btn-perfil i {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
