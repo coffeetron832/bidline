@@ -97,4 +97,22 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Sesión cerrada");
     window.location.reload();
   });
+
+
+const loginBtn = document.getElementById("show-login");
+  const registerBtn = document.getElementById("show-register");
+  const authForms = document.getElementById("auth-forms");
+
+  // Alternar visibilidad del formulario
+  function toggleForms() {
+    if (authForms.style.display === "none" || !authForms.style.display) {
+      authForms.style.display = "flex";
+    } else {
+      authForms.style.display = "none";
+    }
+  }
+
+  loginBtn.addEventListener("click", toggleForms);
+  registerBtn.addEventListener("click", toggleForms);
+  
 });
