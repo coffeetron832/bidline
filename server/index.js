@@ -37,10 +37,16 @@ const clientPath = path.join(process.cwd(), 'client');
 console.log('📂 Sirviendo archivos estáticos desde:', clientPath);
 app.use(express.static(clientPath));
 
-// Fallback para SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(clientPath, 'index.html'));
+// Ruta raíz redirige a explore.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(clientPath, 'explore.html'));
 });
+
+// Fallback (404 personalizado o archivo por defecto)
+app.get('*', (req, res) => {
+  res.status(404).send('Página no encontrada');
+});
+
 
 // Conexión a MongoDB y arranque del servidor
 const PORT = process.env.PORT || 3000;
