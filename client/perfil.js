@@ -37,16 +37,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       listaVideos.innerHTML = ""; // limpiar
       videos.forEach(video => {
-        const div = document.createElement("div");
-        div.classList.add("video-card");
-        div.innerHTML = `
-          <p><strong>${video.title}</strong></p>
-          <p>Subido: ${new Date(video.uploadedAt).toLocaleDateString()}</p>
-          <span class="estado ${video.status}">${video.status}</span>
-          <a href="/videos/${video.filename}" target="_blank">Ver video</a>
-        `;
-        listaVideos.appendChild(div);
-      });
+  const div = document.createElement("div");
+  div.classList.add("video-card");
+
+  div.innerHTML = `
+    <p><strong>${video.title}</strong></p>
+    <p>Subido: ${new Date(video.uploadedAt).toLocaleDateString()}</p>
+    <span class="estado ${video.status}">${video.status}</span>
+    <a href="/videos/${video.filename}" target="_blank">Ver video</a>
+    ${video.status === "rechazado"
+      ? `<button class="btn-eliminar-rechazado" data-id="${video._id}">❌ Quitar</button>`
+      : video.status === "aceptado"
+        ? `<button class="btn-eliminar-final" data-id="${video._id}">🗑️ Eliminar</button>`
+        : ""
+    }
+  `;
+
+  listaVideos.appendChild(div);
+});
+
     }
 
     // Notificaciones
@@ -83,4 +92,56 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
+
+
+// 🧹 Manejar clic en botón "❌ Quitar" para videos rechazados
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("btn-eliminar-rechazado")) {
+    const videoId = e.target.dataset.id;
+    const confirmar = confirm("¿Deseas quitar este video rechazado de tu perfil?");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`/api/videos/removeRejected/${videoId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) throw new Error("No se pudo eliminar");
+      e.target.closest(".video-card").remove();
+    } catch (err) {
+      alert("Error al eliminar video rechazado.");
+      console.error(err);
+    }
+  }
 });
+
+// 🔥 Manejar clic en botón "🗑️ Eliminar" para videos aceptados
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("btn-eliminar-final")) {
+    const videoId = e.target.dataset.id;
+    const confirmar = confirm("¿Deseas eliminar este video para siempre? Se borrará de la plataforma y Cloudinary.");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`/api/videos/delete/${videoId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) throw new Error("No se pudo eliminar");
+      e.target.closest(".video-card").remove();
+    } catch (err) {
+      alert("Error al eliminar el video.");
+      console.error(err);
+    }
+  }
+});
+
+  
+});
+
