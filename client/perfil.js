@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     <p><strong>${video.title}</strong></p>
     <p>Subido: ${new Date(video.uploadedAt).toLocaleDateString()}</p>
     <span class="estado ${video.status}">${video.status}</span>
-    <a href="${video.cloudinary_url}" target="_blank">Ver video</a>
+    <a href="ver-video.html?id=${video._id}">Ver video</a>
     ${video.status === "rechazado"
       ? `<button class="btn-eliminar-rechazado" data-id="${video._id}">❌ Quitar</button>`
       : video.status === "aceptado"
