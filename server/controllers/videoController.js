@@ -133,11 +133,23 @@ const removeRejectedVideo = async (req, res) => {
   }
 };
 
+const getVideoById = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id).populate('uploader', 'username');
+    if (!video) return res.status(404).json({ error: 'Video no encontrado' });
+
+    res.json(video);
+  } catch (err) {
+    console.error("Error al obtener video:", err);
+    res.status(500).json({ error: 'Error al obtener el video' });
+  }
+};
 
 
 module.exports = {
   uploadVideo,
   getApprovedVideos,
+  getVideoById,
   getPendingVideos,
   updateVideoStatus,
   deleteVideoPermanently,
