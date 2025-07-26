@@ -1,4 +1,5 @@
 // server/controllers/videoController.js
+const cloudinary = require('cloudinary').v2;
 const Video = require('../models/Video');
 
 const uploadVideo = async (req, res) => {
@@ -74,10 +75,76 @@ const updateVideoStatus = async (req, res) => {
   }
 };
 
+// Eliminar video aprobado (de BD y de Cloudinary)
+const deleteVideoPermanently = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) {
+      return res.status(404).json({ error: 'Video no encontrado' });
+    }
+
+    // Solo el autor puede eliminarlo
+    if (video.uploader.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado' });
+    }
+
+    // Solo eliminar si fue aprobado
+    if (video.status !== 'aprobado') {
+      return res.status(400).json({ error: 'Solo se pueden eliminar videos aprobados desde aquí.' });
+    }
+
+    // Eliminar de Cloudinary
+    if (video.cloudinary_id) {
+      await cloudinary.uploader.destroy(video.cloudinary_id, { resource_type: 'video' });
+    }
+
+    await video.deleteOne();
+
+    res.json({ message: 'Video eliminado permanentemente' });
+  } catch (err) {
+    console.error("Error al eliminar video aprobado:", err);
+    res.status(500).json({ error: 'Error al eliminar video' });
+  }
+};
+
+// Quitar video rechazado del perfil (solo elimina de BD)
+const removeRejectedVideo = async (req, res) => {
+  try {
+    const video = await Video.findById(req.params.id);
+
+    if (!video) {
+      return res.status(404).json({ error: 'Video no encontrado' });
+    }
+
+    // Solo el autor puede quitarlo
+    if (video.uploader.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado' });
+    }
+
+    // Solo si está rechazado
+    if (video.status !== 'rechazado') {
+      return res.status(400).json({ error: 'Solo se pueden quitar videos rechazados desde aquí.' });
+    }
+
+    await video.deleteOne();
+
+    res.json({ message: 'Video rechazado quitado del perfil' });
+  } catch (err) {
+    console.error("Error al quitar video rechazado:", err);
+    res.status(500).json({ error: 'Error al quitar video' });
+  }
+};
+
+
+
 module.exports = {
   uploadVideo,
   getApprovedVideos,
   getPendingVideos,
-  updateVideoStatus
+  updateVideoStatus,
+  deleteVideoPermanently,
+  removeRejectedVideo
 };
+
 
