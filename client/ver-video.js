@@ -81,6 +81,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     alert("No se pudo cargar el video.");
     window.location.href = "perfil.html";
   }
+
+    let timeout;
+    const wrapper = document.querySelector(".video-wrapper");
+
+    wrapper.addEventListener("mousemove", () => {
+      wrapper.classList.remove("hide-controls");
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        wrapper.classList.add("hide-controls");
+      }, 3000);
+    });
+
+  
 });
 
 function formatTime(seconds) {
