@@ -1,5 +1,4 @@
 // client/ver-video.js
-
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const videoId = urlParams.get("id");
@@ -30,18 +29,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentTimeDisplay = document.getElementById("currentTime");
     const durationDisplay = document.getElementById("duration");
 
-    // Iconos
-    const playIcon = playPauseBtn.querySelector("i");
-    const muteIcon = muteBtn.querySelector("i");
-
     // Reproducción
     playPauseBtn.addEventListener("click", () => {
       if (reproductor.paused) {
         reproductor.play();
-        playIcon.setAttribute("data-lucide", "pause");
+        playPauseBtn.innerHTML = `<i data-lucide="pause"></i>`;
       } else {
         reproductor.pause();
-        playIcon.setAttribute("data-lucide", "play");
+        playPauseBtn.innerHTML = `<i data-lucide="play"></i>`;
       }
       lucide.createIcons();
     });
@@ -49,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Silencio
     muteBtn.addEventListener("click", () => {
       reproductor.muted = !reproductor.muted;
-      muteIcon.setAttribute("data-lucide", reproductor.muted ? "volume-x" : "volume-2");
+      muteBtn.innerHTML = `<i data-lucide="${reproductor.muted ? 'volume-x' : 'volume-2'}"></i>`;
       lucide.createIcons();
     });
 
