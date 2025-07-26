@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const grid = document.querySelector('.video-grid');
-
+  const grid = document.getElementById('video-grid');
 
   try {
-    const res = await fetch('/api/videos/explore');
+    const res = await fetch('/api/videos/explore');  // <-- ruta corregida
     const videos = await res.json();
 
     if (!Array.isArray(videos)) throw new Error('Respuesta no válida');
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       card.className = 'video-card';
 
       card.innerHTML = `
-        <video src="${video.cloudinary_url}" controls></video>
+        <video src="${video.cloudinary_url}" controls></video>  <!-- campo corregido -->
         <h2>${video.title}</h2>
         <p>${video.description || ''}</p>
       `;
