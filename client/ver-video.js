@@ -21,6 +21,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reproductor = document.getElementById("reproductor");
     reproductor.src = video.cloudinary_url;
 
+    // Mostrar botón "Volver al perfil" si el video pertenece al usuario autenticado
+    const token = localStorage.getItem("token");
+    let userId = null;
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        userId = payload.id || payload._id;
+      } catch (e) {
+        console.warn("Token inválido");
+      }
+    }
+
+    if (userId && video.uploader && video.uploader._id === userId) {
+      document.getElementById("volver-perfil").style.display = "inline-block";
+    }
+
     // Controles
     const playPauseBtn = document.getElementById("playPause");
     const muteBtn = document.getElementById("mute");
@@ -50,14 +67,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Pantalla completa
     fullscreenBtn.addEventListener("click", () => {
-  const videoWrapper = document.querySelector(".video-wrapper");
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  } else {
-    videoWrapper.requestFullscreen();
-  }
-});
-
+      const videoWrapper = document.querySelector(".video-wrapper");
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        videoWrapper.requestFullscreen();
+      }
+    });
 
     // Actualizar duración total
     reproductor.addEventListener("loadedmetadata", () => {
@@ -82,18 +98,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "perfil.html";
   }
 
-    let timeout;
-    const wrapper = document.querySelector(".video-wrapper");
+  let timeout;
+  const wrapper = document.querySelector(".video-wrapper");
 
-    wrapper.addEventListener("mousemove", () => {
-      wrapper.classList.remove("hide-controls");
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        wrapper.classList.add("hide-controls");
-      }, 3000);
-    });
-
-  
+  wrapper.addEventListener("mousemove", () => {
+    wrapper.classList.remove("hide-controls");
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      wrapper.classList.add("hide-controls");
+    }, 3000);
+  });
 });
 
 function formatTime(seconds) {
