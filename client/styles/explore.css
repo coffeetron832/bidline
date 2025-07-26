@@ -1,3 +1,5 @@
+/* styles/explore.css - versión compacta para explore.html */
+
 body {
   font-family: sans-serif;
   background-color: #f9f9f9;
@@ -14,6 +16,42 @@ body {
 h1 {
   font-size: 1.8rem;        /* un poco más pequeño */
   margin-bottom: 8px;
+}
+
+.explore-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;          /* menos padding vertical */
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.explore-header h1 {
+  margin: 0;
+}
+
+.btn-perfil {
+  text-decoration: none;
+  border: 1px solid #ccc;
+  padding: 0.4rem 0.6rem;   /* menos padding en botones */
+  border-radius: 6px;
+  color: #333;
+  background-color: transparent;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.btn-perfil:hover {
+  background-color: #eee;
+}
+
+.btn-perfil i {
+  width: 18px;
+  height: 18px;
+  margin-right: 4px;
 }
 
 .video-grid {
@@ -46,33 +84,12 @@ h1 {
 .video-card p {
   font-size: 0.85rem;
   color: #555;
+  margin: 0;
 }
 
-.explore-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;          /* menos padding vertical */
-}
-
-.btn-perfil {
-  text-decoration: none;
-  border: 1px solid #ccc;
-  padding: 0.4rem 0.6rem;   /* menos padding en botones */
-  border-radius: 6px;
-  color: #333;
-  background-color: transparent;
-  transition: background 0.2s ease;
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.btn-perfil:hover {
-  background-color: #eee;
-}
-
-.btn-perfil i {
-  width: 18px;
-  height: 18px;
+.container a[href="index.html"] {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #666;
 }
