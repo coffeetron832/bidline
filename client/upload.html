@@ -9,36 +9,55 @@
   <!-- Toastify CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
   <style>
-    #progressContainer {
-      display: none;
-      width: 100%;
-      max-width: 500px;
-      height: 22px;
-      background: #eee;
-      border-radius: 12px;
-      margin: 20px auto;
-      overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
-    }
+    #equalizerContainer {
+  width: 100%;
+  max-width: 500px;
+  margin: 30px auto;
+  position: relative;
+}
 
-    #progressBar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #00c6ff, #0072ff);
-      transition: width 0.2s ease;
-    }
+#equalizer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 60px;
+  background: #f2f2f2;
+  padding: 10px 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
 
-    #progressText {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      text-align: center;
-      line-height: 22px;
-      font-weight: bold;
-      font-size: 0.85rem;
-      color: #333;
-    }
+#equalizer .bar {
+  width: 6px;
+  background: #0072ff;
+  border-radius: 3px;
+  animation: bounce 1s infinite ease-in-out;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+#equalizer .bar:nth-child(1) { --i: 1; }
+#equalizer .bar:nth-child(2) { --i: 2; }
+#equalizer .bar:nth-child(3) { --i: 3; }
+#equalizer .bar:nth-child(4) { --i: 4; }
+#equalizer .bar:nth-child(5) { --i: 5; }
+#equalizer .bar:nth-child(6) { --i: 6; }
+#equalizer .bar:nth-child(7) { --i: 7; }
+
+@keyframes bounce {
+  0%, 100% { height: 20%; }
+  50% { height: 100%; }
+}
+
+#progressText {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #333;
+}
   </style>
 </head>
 <body>
@@ -53,10 +72,19 @@
       <button type="submit">Enviar para revisión</button>
     </form>
 
-    <div id="progressContainer">
-      <div id="progressBar"></div>
-      <span id="progressText">0%</span>
-    </div>
+   <div id="equalizerContainer" style="display: none;">
+  <div id="equalizer">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <span id="progressText">0%</span>
+  </div>
+</div>
+
 
     <a href="explore.html">← Volver a explorar videos</a>
   </main>
@@ -65,80 +93,78 @@
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
   <script>
-    const form = document.getElementById('upload-form');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
+  const form = document.getElementById('upload-form');
+  const equalizerContainer = document.getElementById('equalizerContainer');
+  const progressText = document.getElementById('progressText');
+  // Nota: elimina referencias a progressContainer y progressBar
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        Toastify({
-          text: "Debes iniciar sesión para subir un video.",
-          duration: 4000,
-          close: true,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#e53935"
-        }).showToast();
-        return;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      Toastify({
+        text: "Debes iniciar sesión para subir un video.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#e53935"
+      }).showToast();
+      return;
+    }
+
+    const formData = new FormData(form);
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/videos/upload');
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        equalizerContainer.style.display = 'block';
+        progressText.textContent = percent + '%';
       }
+    });
 
-      const formData = new FormData(form);
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/videos/upload');
-      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-
-      xhr.upload.addEventListener('progress', (e) => {
-        if (e.lengthComputable) {
-          const percent = Math.round((e.loaded / e.total) * 100);
-          progressContainer.style.display = 'block';
-          progressBar.style.width = percent + '%';
-          progressText.textContent = percent + '%';
-        }
-      });
-
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          progressBar.style.background = 'linear-gradient(90deg, #00e676, #00c853)';
-          progressText.textContent = '¡Subido!';
-          Toastify({
-            text: "✅ Video enviado correctamente. Será revisado antes de publicarse.",
-            duration: 4000,
-            close: true,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#4caf50"
-          }).showToast();
-          form.reset();
-        } else {
-          const res = JSON.parse(xhr.responseText);
-          Toastify({
-            text: `❌ ${res.error || 'Ocurrió un error al subir el video.'}`,
-            duration: 4000,
-            close: true,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#e53935"
-          }).showToast();
-        }
-      };
-
-      xhr.onerror = () => {
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        progressText.textContent = '✅ Subido';
         Toastify({
-          text: "❌ Error de conexión con el servidor.",
+          text: "✅ Video enviado correctamente. Será revisado antes de publicarse.",
+          duration: 4000,
+          close: true,
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#4caf50"
+        }).showToast();
+        form.reset();
+      } else {
+        const res = JSON.parse(xhr.responseText);
+        Toastify({
+          text: `❌ ${res.error || 'Ocurrió un error al subir el video.'}`,
           duration: 4000,
           close: true,
           gravity: "top",
           position: "right",
           backgroundColor: "#e53935"
         }).showToast();
-      };
+      }
+    };
 
-      xhr.send(formData);
-    });
-  </script>
+    xhr.onerror = () => {
+      Toastify({
+        text: "❌ Error de conexión con el servidor.",
+        duration: 4000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#e53935"
+      }).showToast();
+    };
+
+    xhr.send(formData);
+  });
+</script>
 </body>
 </html>
