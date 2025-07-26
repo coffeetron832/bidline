@@ -47,17 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function showToast(message, isError = false) {
-    Toastify({
-      text: message,
-      duration: 4000,
-      close: true,
-      gravity: "top",
-      position: "right",
-      style: {
-        background: isError ? "#e53935" : "#4caf50"
-      }
-    }).showToast();
-  }
+  Toastify({
+    text: message,
+    duration: 4000,
+    close: true,
+    gravity: "top",
+    position: "right",
+    offset: {
+      x: 10, // opcional, distancia horizontal desde el borde
+      y: 60  // aumenta este valor para bajar la notificación
+    },
+    style: {
+      background: isError ? "#e53935" : "#4caf50"
+    }
+  }).showToast();
+}
 
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
