@@ -14,7 +14,7 @@
     <h1>Subir video</h1>
     <p>Todos los videos pasan por una revisión manual antes de ser publicados.</p>
 
-    <form id="upload-form" class="upload-form">
+    <form id="upload-form" class="upload-form" enctype="multipart/form-data" method="POST" action="/api/videos/upload">
       <input type="text" name="title" placeholder="Título del video" required />
       <textarea name="description" placeholder="Descripción (opcional)" rows="4"></textarea>
       <input type="file" name="video" accept="video/mp4,video/webm" required />
